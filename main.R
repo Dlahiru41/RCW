@@ -38,4 +38,25 @@ outlier_indices <- apply(scaled_data, 2, detect_outliers)
 # Remove outliers
 cleaned_data <- scaled_data[!apply(outlier_indices, 1, any), ]
 
+# Assuming your scaled and cleaned data is stored in 'cleaned_data'
+library(NbClust)
+
+# Determine the number of clusters using NBclust
+nb_clusters <- NbClust(cleaned_data, min.nc = 2, max.nc = 10, method = "kmeans")
+nb_clusters$Best.nc
+
+
+wcss <- numeric(10)
+for (i in 1:10) {
+  kmeans_model <- kmeans(cleaned_data, centers = i)
+  wcss[i] <- kmeans_model$tot.withinss
+}
+plot(1:10, wcss, type = "b", xlab = "Number of Clusters", ylab = "Within-Cluster Sum of Squares (WCSS)", main = "Elbow Method")
+
+
+library(cluster)
+gap_stat <- clusGap(cleaned_data, FUN = kmeans, nstart = 25, K.max = 10, B = 50)
+plot(gap_stat, main = "Gap Statistics")
+
+
 
