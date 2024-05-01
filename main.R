@@ -67,3 +67,37 @@ k <- 2:10
 avg_sil <- sapply(k, silhouette_score)
 plot(k, type='b', avg_sil, xlab='Number of clusters', ylab='Average Silhouette Scores', frame=FALSE)
 
+
+#Based on the above results
+optimal_k <- 2
+# Perform k-means clustering with the optimal number of clusters
+kmeans_model <- kmeans(cleaned_data, centers = optimal_k)
+
+# Print kmeans model output
+print(kmeans_model)
+
+# Calculate within-cluster sum of squares (WSS)
+wss <- sum(kmeans_model$withinss)
+
+# Calculate between-cluster sum of squares (BSS)
+bss <- sum(kmeans_model$betweenss)
+
+# Calculate total sum of squares (TSS)
+tss <- wss + bss
+
+# Calculate ratio of BSS over TSS
+bss_tss_ratio <- bss / tss
+
+# Print relevant metrics
+cat("Within-cluster sum of squares (WSS):", wss, "\n")
+cat("Between-cluster sum of squares (BSS):", bss, "\n")
+cat("Total sum of squares (TSS):", tss, "\n")
+cat("Ratio of BSS over TSS:", bss_tss_ratio, "\n")
+
+# Visualize cluster centers
+cluster_centers <- kmeans_model$centers
+print(cluster_centers)
+
+# Visualize cluster assignments
+cluster_assignments <- kmeans_model$cluster
+table(cluster_assignments)
