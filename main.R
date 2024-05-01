@@ -58,5 +58,12 @@ library(cluster)
 gap_stat <- clusGap(cleaned_data, FUN = kmeans, nstart = 25, K.max = 10, B = 50)
 plot(gap_stat, main = "Gap Statistics")
 
-
+silhouette_score <- function(k){
+  km <- kmeans(cleaned_data, centers = k, nstart=25)
+  ss <- silhouette(km$cluster, dist(cleaned_data))
+  mean(ss[, 3])
+}
+k <- 2:10
+avg_sil <- sapply(k, silhouette_score)
+plot(k, type='b', avg_sil, xlab='Number of clusters', ylab='Average Silhouette Scores', frame=FALSE)
 
